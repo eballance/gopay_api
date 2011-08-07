@@ -2,12 +2,15 @@ require "gopay/config"
 
 module GoPay
 
-  class Base
+  module Base
 
     attr_accessor :environment
     attr_reader :config
-    
-    def initialize(environment = :production)
+
+    @environment = "test"
+    @config = GoPay::Config.new(@environment)
+
+    def environment=(environment = :test)
       @environment = environment
       @config = GoPay::Config.new(environment)
     end

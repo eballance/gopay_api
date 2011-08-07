@@ -14,4 +14,6 @@ class ConfigTest < Test::Unit::TestCase
     assert_equal "https://testgw.gopay.cz/zaplatit-plna-integrace", config.urls["full_integration_url"]
   end
 
+  should "give access to config via initialized "
+
 end
