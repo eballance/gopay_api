@@ -1,19 +1,16 @@
 require "yaml"
-require "singleton"
 
 module GoPay
 
   class Config
-    include ::Singleton
 
     BASE_PATH = File.expand_path("../../../", __FILE__)
 
-    attr_reader :country_codes, :config
+    attr_accessor :country_codes, :urls
 
-    def initialize(env = "test")
+    def initialize(environment = "production")
       @country_codes = YAML.load_file File.join(BASE_PATH, "config", "country_codes.yml")
-      @config = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))[env.to_s]
+      @urls = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))[environment]
     end
-
   end
 end

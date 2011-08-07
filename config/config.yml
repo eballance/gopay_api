@@ -3,7 +3,6 @@ test:
   wsdl_url: https://testgw.gopay.cz/axis/EPaymentService?wsdl
   base_integration_url: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
   buyer_base_integration_url: https://testgw.gopay.cz/zaplatit-tlacitko
-
 production:
   full_integration_url: https://gate.gopay.cz/zaplatit-plna-integrace
   wsdl_url: https://gate.gopay.cz/axis/EPaymentService?wsdl
