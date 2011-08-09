@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "gopay"
 
+  s.add_dependency("savon")
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ["lib"]

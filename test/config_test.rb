@@ -1,10 +1,4 @@
-$: << File.join(File.expand_path(File.dirname(__FILE__)), "../lib")
-
-require "rubygems"
-require 'test/unit'
-require "shoulda"
-
-require "gopay"
+require "test_helper"
 
 class ConfigTest < Test::Unit::TestCase
 
@@ -19,8 +13,6 @@ class ConfigTest < Test::Unit::TestCase
       assert_equal "https://testgw.gopay.cz/zaplatit-plna-integrace", GoPay::Config.urls["full_integration_url"]
     end
 
-
   end
-
 
 end
