@@ -8,12 +8,19 @@ require "gopay"
 
 class ConfigTest < Test::Unit::TestCase
 
-  should "load both config and country_codes yml files" do
-    config = GoPay::Config.new("test")
-    assert_equal "Česká Republika", config.country_codes["CZE"]
-    assert_equal "https://testgw.gopay.cz/zaplatit-plna-integrace", config.urls["full_integration_url"]
+  context "GoPay configured" do
+
+    setup do
+      GoPay::Config.init("test")
+    end
+
+    should "load both config and country_codes yml files" do
+      assert_equal "Česká Republika", GoPay::Config.country_codes["CZE"]
+      assert_equal "https://testgw.gopay.cz/zaplatit-plna-integrace", GoPay::Config.urls["full_integration_url"]
+    end
+
+
   end
 
-  should "give access to config via initialized "
 
 end
