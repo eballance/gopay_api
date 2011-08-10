@@ -2,17 +2,30 @@ require "yaml"
 
 module GoPay
 
-  module Config
-    extend self
+  BASE_PATH = File.expand_path("../../../", __FILE__)
 
-    BASE_PATH = File.expand_path("../../../", __FILE__)
-
-    attr_reader :country_codes, :urls
-
-    def self.init(environment = "production", &block)
-      @country_codes = YAML.load_file File.join(BASE_PATH, "config", "country_codes.yml")
-      @urls = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))[environment]
-      instance_eval &block if block_given?
-    end
+  def self.configure
+    yield configuration
   end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  class Configuration
+    attr_accessor :environment, :goid
+    attr_reader :country_codes
+
+    def initialize
+      @environment ||= :production
+      @country_codes = YAML.load_file File.join(BASE_PATH, "config", "country_codes.yml")
+      @urls = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))
+    end
+
+    def urls
+      @urls[@environment.to_s]
+    end
+
+  end
+
 end
