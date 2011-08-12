@@ -1,10 +1,24 @@
-test:
-  full_integration_url: https://testgw.gopay.cz/zaplatit-plna-integrace
-  wsdl_url: https://testgw.gopay.cz/axis/EPaymentService?wsdl
-  base_integration_url: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
-  buyer_base_integration_url: https://testgw.gopay.cz/zaplatit-tlacitko
-production:
-  full_integration_url: https://gate.gopay.cz/zaplatit-plna-integrace
-  wsdl_url: https://gate.gopay.cz/axis/EPaymentService?wsdl
-  base_integration_url: https://gate.gopay.cz/zaplatit-jednoducha-integrace
-  buyers_base_integration_url: https://gate.gopay.cz/zaplatit-tlacitko
+urls:
+  test:
+    full_integration_url: https://testgw.gopay.cz/zaplatit-plna-integrace
+    wsdl_url: https://testgw.gopay.cz/axis/EPaymentService?wsdl
+    base_integration_url: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
+    buyer_base_integration_url: https://testgw.gopay.cz/zaplatit-tlacitko
+  production:
+    full_integration_url: https://gate.gopay.cz/zaplatit-plna-integrace
+    wsdl_url: https://gate.gopay.cz/axis/EPaymentService?wsdl
+    base_integration_url: https://gate.gopay.cz/zaplatit-jednoducha-integrace
+    buyers_base_integration_url: https://gate.gopay.cz/zaplatit-tlacitko
+messages:
+  payment_done: Platba byla úspěšně provedena.<br>Děkujeme Vám za využití našich služeb.
+  canceled: Platba byla zrušena.<br>Opakujte platbu znovu, prosím.
+  timeouted: Platba byla zrušena.<br>Opakujte platbu znovu, prosím.
+  waiting: Platba zatím nebyla provedena. O provedení platby Vás budeme neprodleně informovat pomocí emailu s potvrzením platby. Pokud neobdržíte do následujícího pracovního dne potvrzovací email o platbě, kontaktujte podporu GoPay na emailu podpora@gopay.cz.
+  waiting_offline: Platba zatím nebyla provedena. Na platební bráně GoPay jste získali platební údaje a na Váš email Vám byly zaslány informace k provedení platby. O provedení platby Vás budeme budeme neprodleně informovat pomocí emailu s potvrzením platby.
+  failed: V průběhu platby nastala chyba. Kontaktujte podporu GoPay na emailu podpora@gopay.cz.
+icons:
+   fast_payment: https://www.gopay.cz/download/PT_rychloplatba.png
+   gift: https://www.gopay.cz/download/PT_daruj.png
+   buynow: https://www.gopay.cz/download/PT_buynow.png
+   donate: https://www.gopay.cz/download/PT_donate.png
+
