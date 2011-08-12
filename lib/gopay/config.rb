@@ -12,8 +12,16 @@ module GoPay
     @configuration ||= Configuration.new
   end
 
+  def self.configure_from_yaml(path)
+    yaml = YAML.load_file(path)
+    configuration.goid = yaml["goid"]
+    configuration.success_url = yaml["success_url"]
+    configuration.failed_url = yaml["failed_url"]
+    configuration.secret = yaml["secret_url"]
+  end
+
   class Configuration
-    attr_accessor :environment, :goid
+    attr_accessor :environment, :goid, :success_url, :failed_url, :secret
     attr_reader :country_codes, :messages
 
     def initialize

@@ -1,0 +1,4 @@
+goid: 8531903182
+success_url: http://example.com/gopay/success
+failed_url: http://example.com/gopay/failed
+secret: a7ksDBye2Pm9sEwx3PfLiV6E

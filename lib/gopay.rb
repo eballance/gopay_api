@@ -1,5 +1,5 @@
 require "gopay/config"
-require "gopay/soap"
+require "gopay/models"
 
 module GoPay
 
