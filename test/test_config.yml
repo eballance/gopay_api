@@ -1,4 +1,4 @@
 goid: 8531903182
-success_url: http://example.com/gopay/success
-failed_url: http://example.com/gopay/failed
+success_url: http://www.success_url.cz
+failed_url: http://www.failed_url.cz
 secret: a7ksDBye2Pm9sEwx3PfLiV6E

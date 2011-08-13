@@ -17,7 +17,7 @@ module GoPay
     configuration.goid = yaml["goid"]
     configuration.success_url = yaml["success_url"]
     configuration.failed_url = yaml["failed_url"]
-    configuration.secret = yaml["secret_url"]
+    configuration.secret = yaml["secret"]
   end
 
   class Configuration

@@ -1,14 +1,14 @@
 urls:
   test:
-    full_integration_url: https://testgw.gopay.cz/zaplatit-plna-integrace
-    wsdl_url: https://testgw.gopay.cz/axis/EPaymentService?wsdl
-    base_integration_url: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
-    buyer_base_integration_url: https://testgw.gopay.cz/zaplatit-tlacitko
+    full_integration: https://testgw.gopay.cz/zaplatit-plna-integrace
+    wsdl: https://testgw.gopay.cz/axis/EPaymentService?wsdl
+    base_integration: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
+    buyer_base_integration: https://testgw.gopay.cz/zaplatit-tlacitko
   production:
-    full_integration_url: https://gate.gopay.cz/zaplatit-plna-integrace
-    wsdl_url: https://gate.gopay.cz/axis/EPaymentService?wsdl
-    base_integration_url: https://gate.gopay.cz/zaplatit-jednoducha-integrace
-    buyers_base_integration_url: https://gate.gopay.cz/zaplatit-tlacitko
+    full_integration: https://gate.gopay.cz/zaplatit-plna-integrace
+    wsdl: https://gate.gopay.cz/axis/EPaymentService?wsdl
+    base_integration: https://gate.gopay.cz/zaplatit-jednoducha-integrace
+    buyers_base_integration: https://gate.gopay.cz/zaplatit-tlacitko
 messages:
   payment_done: Platba byla úspěšně provedena.<br>Děkujeme Vám za využití našich služeb.
   canceled: Platba byla zrušena.<br>Opakujte platbu znovu, prosím.

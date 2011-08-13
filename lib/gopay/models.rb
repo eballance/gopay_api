@@ -9,11 +9,35 @@ module GoPay
 
     class PaymentCommand
 
-      attr_reader :goid, :product_name, :total_price_in_cents, :variable_symbol
+      attr_accessor :product_name, :total_price_in_cents, :variable_symbol
+
+      def create
+        client = Savon::Client.new GoPay.configuration.urls["wsdl"]
+        params = self.to_soap
+        pp params
+        response = client.request "createPaymentSession" do |soap|
+          soap.body =  { "paymentCommand" => params }
+        end
+        pp response.to_hash
+      end
+
+      def signature
+        GoPay::Crypt.encrypt(GoPay::Crypt.sha1(self.concat), GoPay.configuration.secret)
+      end
+
+      def to_soap
+        {"eshopGoId" => GoPay.configuration.goid.to_i,
+         "productName" => product_name,
+         "totalPrice" => total_price_in_cents,
+         "variableSymbol" => variable_symbol,
+         "successURL" => GoPay.configuration.success_url,
+         "failedURL" => GoPay.configuration.failed_url,
+         "encryptedSignature" => signature}
+      end
 
       def concat
-        [GoPay.goid, product_name, total_price_in_cents, variable_symbol,
-         GoPay.success_url, GoPay.failed_url, GoPay.secret].map { |attr| attr.strip }.join("|")
+        [GoPay.configuration.goid, product_name.strip, total_price_in_cents, variable_symbol.strip,
+          GoPay.configuration.failed_url, GoPay.configuration.success_url, GoPay.configuration.secret].map { |attr| attr }.join("|")
       end
 
     end
