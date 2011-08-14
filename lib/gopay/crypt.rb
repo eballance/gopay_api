@@ -1,7 +1,5 @@
-require 'digest/sha1'
-require 'openssl'
-require 'pp'
-
+require "digest/sha1"
+require "openssl"
 
 module GoPay
 
@@ -12,10 +10,11 @@ module GoPay
       Digest::SHA1.hexdigest(string)
     end
 
-    def encrypt(string, secret)
+    def encrypt(object)
+      string = sha1(object.concat)
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.encrypt
-      des.key = secret
+      des.key = GoPay.configuration.secret
       result = des.update(string)
       result.unpack("H*").to_s
     end
