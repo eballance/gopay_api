@@ -5,8 +5,7 @@ class ModelsTest < Test::Unit::TestCase
   context "GoPay configured" do
 
     should "load payment methods" do
-      assert GoPay::Models::PaymentMethod.all.first.is_a?(GoPay::Models::PaymentMethod)
-
+      assert GoPay::PaymentMethod.all.first.is_a?(GoPay::PaymentMethod)
     end
 
   end

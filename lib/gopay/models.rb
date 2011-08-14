@@ -5,29 +5,29 @@ Savon.configure { |config| config.log = false }
 
 module GoPay
 
+  module Model
+    def initialize(attributes = {})
+      attributes.each do |key, value|
+        instance_variable_set :"@#{key}", value
+      end
+    end
+
+  end
+
   class PaymentCommand
+    include Model
 
     attr_accessor :product_name, :total_price_in_cents, :variable_symbol
 
     def create
       client = Savon::Client.new GoPay.configuration.urls["wsdl"]
-      params = self.to_soap
-      pp params
       response = client.request "createPaymentSession" do |soap|
-        soap.body = {"paymentCommand" => params}
+        soap.body = {"paymentCommand" => self.to_soap}
       end
-      pp response.to_hash
-    end
-
-    def initialize(attributes = {})
-      attributes.each do |key, value|
-        instance_variable_set :"@#{key}", value
-      end
-
     end
 
     def signature
-      GoPay::Crypt.encrypt(GoPay::Crypt.sha1(self.concat), GoPay.configuration.secret)
+      GoPay::Crypt.encrypt(self)
     end
 
     def to_soap
@@ -113,7 +113,7 @@ module GoPay
     end
 
     def self.all
-      client = Savon::Client.new "https://testgw.gopay.cz/axis/EPaymentService?wsdl"
+      client = Savon::Client.new GoPay.configuration.urls["wsdl"]
       response = client.request("paymentMethodList")
       response.to_hash[:payment_method_list_response][:payment_method_list_return][:payment_method_list_return].map do |item|
         PaymentMethod.new(item)

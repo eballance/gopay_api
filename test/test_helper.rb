@@ -4,6 +4,7 @@ require "rubygems"
 require 'test/unit'
 require "shoulda"
 require "gopay"
+require "pp"
 
 GoPay.configure do |config|
   config.environment = :test
