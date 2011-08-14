@@ -8,13 +8,13 @@ module GoPay
   module Model
     def initialize(attributes = {})
       attributes.each do |key, value|
-        instance_variable_set :"@#{key}", value
+        instance_variable_set(:"@#{key}", value) if self.respond_to?(key)
       end
     end
 
   end
 
-  class PaymentCommand
+  class Payment
     include Model
 
     attr_accessor :product_name, :total_price_in_cents, :variable_symbol
@@ -24,7 +24,30 @@ module GoPay
       response = client.request "createPaymentSession" do |soap|
         soap.body = {"paymentCommand" => self.to_soap}
       end
+      response = response.to_hash[:create_payment_session_response][:create_payment_session_return]
+      check_common(response, "WAITING") && check_signature(response, "WAITING")
     end
+
+    def check_common(response, status)
+      response[:result] == "CALL_COMPLETED" and
+          response[:result_description] == status and
+          response[:variable_symbol] == variable_symbol and
+          response[:product_name] == product_name and
+          response[:total_price].to_i == total_price_in_cents.to_i and
+          (response[:eshop_go_id].to_i == GoPay.configuration.goid.to_i or
+              response[:buyer_go_id].to_i == GoPay.configuration.goid.to_i)
+    end
+
+    def check_signature(response, status)
+      payment_result = PaymentResult.new({:goid => GoPay.configuration.goid,
+                                  :product_name => self.product_name,
+                                  :variable_symbol => self.variable_symbol,
+                                  :total_price_in_cents => total_price_in_cents,
+                                  :result => "CALL_COMPLETED",
+                                  :session_state => status})
+      GoPay::Crypt.sha1(payment_result.concat) == GoPay::Crypt.decrypt(response[:encrypted_signature])
+    end
+
 
     def signature
       GoPay::Crypt.encrypt(self)
@@ -40,20 +63,23 @@ module GoPay
        "encryptedSignature" => signature}
     end
 
+  end
+
+  class PaymentCommand < Payment
     def concat
       [GoPay.configuration.goid, product_name.strip, total_price_in_cents, variable_symbol.strip,
        GoPay.configuration.failed_url, GoPay.configuration.success_url, GoPay.configuration.secret].map { |attr| attr }.join("|")
     end
-
   end
 
   class PaymentResult
+    include Model
 
     attr_reader :goid, :product_name, :total_price_in_cents, :variable_symbol, :result, :session_state
 
     def concat
-      [GoPay.goid, product_name, total_price_in_cents, variable_symbol,
-       result, session_state, GoPay.secret].map { |attr| attr.strip }.join("|")
+      [GoPay.configuration.goid.to_s, product_name, total_price_in_cents.to_s, variable_symbol,
+       result, session_state, GoPay.configuration.secret].map { |attr| attr.strip }.join("|")
     end
 
   end
@@ -101,16 +127,9 @@ module GoPay
 
 
   class PaymentMethod
+    include Model
 
     attr_reader :code, :offline, :payment_method, :logo
-
-    def initialize(hash)
-      @code = hash[:code]
-      @offline = hash[:offline]
-      @payment_method = hash[:payment_method]
-      @description = hash[:description]
-      @logo = hash[:logo]
-    end
 
     def self.all
       client = Savon::Client.new GoPay.configuration.urls["wsdl"]

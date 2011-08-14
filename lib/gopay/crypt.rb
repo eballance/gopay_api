@@ -10,8 +10,8 @@ module GoPay
       Digest::SHA1.hexdigest(string)
     end
 
-    def encrypt(object)
-      string = sha1(object.concat)
+    def encrypt(object_or_string)
+      string = object_or_string.is_a?(String)? object_or_string : sha1(object_or_string.concat)
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.encrypt
       des.key = GoPay.configuration.secret
@@ -24,7 +24,6 @@ module GoPay
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.decrypt
       des.key = GoPay.configuration.secret
-      des.padding = 0
       result = ""
       result << des.update(encrypted_data)
     end

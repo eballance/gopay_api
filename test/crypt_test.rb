@@ -20,9 +20,15 @@ class CryptTest < Test::Unit::TestCase
                    GoPay::Crypt.encrypt(@payment_command)
     end
 
-    should "decrypt self encrypted signature" do
-      encrypted_stuff = GoPay::Crypt.encrypt(@payment_command)
-      assert_equal GoPay::Crypt.sha1(@payment_command.concat), GoPay::Crypt.decrypt(encrypted_stuff)
+    should "decrypt some encrypted signature" do
+      @payment_result = GoPay::PaymentResult.new({:goid => GoPay.configuration.goid,
+                                  :product_name => @payment_command.product_name,
+                                  :variable_symbol => @payment_command.variable_symbol,
+                                  :total_price_in_cents => @payment_command.total_price_in_cents,
+                                  :result => "CALL_COMPLETED",
+                                  :session_state => "WAITING"})
+      encrypted_stuff = "4b642f395a13254cac7aadf96def19234ce73c823d22326e688a0c4410eb9465ae842f4786cb2a2fa5b661f6d58385a0"
+      assert_equal GoPay::Crypt.sha1(@payment_result.concat), GoPay::Crypt.decrypt(encrypted_stuff)
     end
 
   end
