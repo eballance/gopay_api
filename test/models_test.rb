@@ -16,7 +16,10 @@ class ModelsTest < Test::Unit::TestCase
       end
 
       should "create and verify payment" do
-        assert @eshop_payment.create.is_a?(Hash)
+        created = @eshop_payment.create
+        assert created.is_a?(GoPay::EshopPayment)
+        assert created.payment_session_id.to_i > 0
+        assert created.last_response.is_a?(Hash)
       end
 
 

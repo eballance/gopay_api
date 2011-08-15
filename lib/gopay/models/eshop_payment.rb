@@ -9,7 +9,8 @@ module GoPay
       end
       response = response.to_hash[:create_payment_session_response][:create_payment_session_return]
       self.payment_session_id = response[:payment_session_id]
-      valid?(response) ? response : false
+      self.last_response = response
+      valid?(response) ? self : false
     end
 
     def to_soap
@@ -21,7 +22,6 @@ module GoPay
        "failedURL" => GoPay.configuration.failed_url,
        "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_create)}
     end
-
 
   end
 
