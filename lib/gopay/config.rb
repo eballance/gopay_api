@@ -3,6 +3,12 @@ require "yaml"
 module GoPay
 
   BASE_PATH = File.expand_path("../../../", __FILE__)
+  PAYMENT_DONE = "PAYMENT_DONE"
+	CANCELED = "CANCELED"
+	TIMEOUTED = "TIMEOUTED"
+	WAITING = "WAITING"
+	FAILED = "FAILED"
+  CALL_COMPLETED = "CALL_COMPLETED"
 
   def self.configure
     yield configuration

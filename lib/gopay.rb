@@ -1,13 +1,6 @@
 require "gopay/config"
-require "gopay/models"
 require "gopay/crypt"
 
-
-module GoPay
-
-  module Base
-
-
-  end
-
-end
+require "gopay/models/payment"
+require "gopay/models/eshop_payment"
+require "gopay/models/payment_method"
