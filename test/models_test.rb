@@ -8,23 +8,43 @@ class ModelsTest < Test::Unit::TestCase
       assert GoPay::PaymentMethod.all.first.is_a?(GoPay::PaymentMethod)
     end
 
-    context "with @payment_method" do
+    context "when having test EshopPayment" do
       setup do
-        @eshop_payment = GoPay::EshopPayment.new({:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
-                                                      :total_price_in_cents => 100,
-                                                      :product_name => "productName"})
+        @payment = GoPay::EshopPayment.new({:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
+                                            :total_price_in_cents => 100,
+                                            :product_name => "productName"})
       end
 
-      should "create and verify payment" do
-        created = @eshop_payment.create
+      should "create and verify this payment on paygate" do
+        created = @payment.create
         assert created.is_a?(GoPay::EshopPayment)
         assert created.payment_session_id.to_i > 0
         assert created.last_response.is_a?(Hash)
       end
-
-
     end
 
+    context "when having test CustomerEshopPayment" do
+      setup do
+        @payment = GoPay::CustomerEshopPayment.new({:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
+                                                    :total_price_in_cents => 100,
+                                                    :product_name => "productName",
+                                                    :first_name => "Patrik",
+                                                    :last_name => "Jira",
+                                                    :city => "Praha",
+                                                    :street => "Prazska",
+                                                    :country_code => "420",
+                                                    :postal_code => "140 00",
+                                                    :email => "patrikjira@example.com",
+                                                    :phone_number => "777 777 777"})
+      end
+
+      should "create and verify this payment on paygate" do
+        created = @payment.create
+        assert created.is_a?(GoPay::CustomerEshopPayment)
+        assert created.payment_session_id.to_i > 0
+        assert created.last_response.is_a?(Hash)
+      end
+    end
   end
 
 end

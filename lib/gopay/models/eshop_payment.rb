@@ -20,7 +20,8 @@ module GoPay
        "variableSymbol" => variable_symbol,
        "successURL" => GoPay.configuration.success_url,
        "failedURL" => GoPay.configuration.failed_url,
-       "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_create)}
+       "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_create),
+       "paymentChannels" => (payment_channels || []).join(",")}
     end
 
   end

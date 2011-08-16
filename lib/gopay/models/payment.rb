@@ -13,7 +13,7 @@ module GoPay
       end
     end
 
-    attr_reader :product_name, :total_price_in_cents, :variable_symbol
+    attr_reader :product_name, :total_price_in_cents, :variable_symbol, :payment_channels
     attr_accessor :payment_session_id, :last_response
 
 
