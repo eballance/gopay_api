@@ -19,10 +19,11 @@ module GoPay
       result.unpack("H*").to_s
     end
 
-    def decrypt(encrypted_data)
+    def decrypt(encrypted_data, padding_off = false)
       encrypted_data = bin2hex(encrypted_data)
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.decrypt
+      des.padding = 0 if padding_off
       des.key = GoPay.configuration.secret
       result = ""
       result << des.update(encrypted_data)
