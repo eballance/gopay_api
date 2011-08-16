@@ -18,7 +18,7 @@ module GoPay
 
 
     def validate_response(response, status)
-      goid = response[:eshop_go_id].to_s == GoPay.configuration.goid.to_s or response[:buyer_go_id].to_s == GoPay.configuration.goid.to_s
+      goid = (response[:eshop_go_id].to_s == GoPay.configuration.goid.to_s) || (response[:buyer_go_id].to_s == GoPay.configuration.goid.to_s)
       {:result => GoPay::CALL_COMPLETED,
        :result_description => status,
        :variable_symbol => variable_symbol,
@@ -32,8 +32,6 @@ module GoPay
     end
 
     def valid?(response)
-      pp validate_response(response, GoPay::WAITING)
-      pp validate_signature(response, GoPay::WAITING)
       validate_response(response, GoPay::WAITING) && validate_signature(response, GoPay::WAITING)
     end
 

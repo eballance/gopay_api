@@ -9,7 +9,6 @@ module GoPay
       response = client.request "createCustomerPaymentSession" do |soap|
         soap.body = {"paymentCommand" => self.to_soap}
       end
-      pp response.to_hash
       response = response.to_hash[:create_customer_payment_session_response][:create_customer_payment_session_return]
       self.payment_session_id = response[:payment_session_id]
       self.last_response = response

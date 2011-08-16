@@ -45,6 +45,23 @@ class ModelsTest < Test::Unit::TestCase
         assert created.last_response.is_a?(Hash)
       end
     end
+
+    context "when having test BuyerPayment" do
+      setup do
+        stub_buyer_credentials!
+        @payment = GoPay::BuyerPayment.new({:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
+                                            :total_price_in_cents => 100,
+                                            :product_name => "productName"})
+      end
+
+      should "create and verify this payment on paygate" do
+        created = @payment.create
+        assert created.is_a?(GoPay::BuyerPayment)
+        assert created.payment_session_id.to_i > 0
+        assert created.last_response.is_a?(Hash)
+
+      end
+    end
   end
 
 end
