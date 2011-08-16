@@ -24,6 +24,22 @@ module GoPay
        "paymentChannels" => (payment_channels || []).join(",")}
     end
 
+    def to_check_soap
+      {"eshopGoId" => GoPay.configuration.goid.to_i,
+       "paymentSessionId" => payment_session_id,
+       "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_check)}
+    end
+
+    def is_in_state?(desired_status)
+      client = Savon::Client.new GoPay.configuration.urls["wsdl"]
+      response = client.request "paymentStatusGW2" do |soap|
+        soap.body = {"paymentSessionInfo" => self.to_check_soap}
+      end
+      response = response.to_hash[:payment_status_gw2_response][:payment_status_gw2_return]
+      self.last_response = response
+      valid?(response, desired_status)
+    end
+
   end
 
 end
