@@ -5,9 +5,9 @@ class CryptTest < Test::Unit::TestCase
   context "GoPay configured" do
 
     setup do
-     @eshop_payment = GoPay::EshopPayment.new(:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
-                                                      :total_price_in_cents => 100,
-                                                      :product_name => "productName")
+      @eshop_payment = GoPay::EshopPayment.new(:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
+                                               :total_price_in_cents => 100,
+                                               :product_name => "productName")
     end
 
     should "generate sha1 hexdigest for an object" do
@@ -22,11 +22,18 @@ class CryptTest < Test::Unit::TestCase
 
     should "decrypt some encrypted signature" do
       @payment_with_result = GoPay::EshopPayment.new(:goid => GoPay.configuration.goid,
-                                  :product_name => @eshop_payment.product_name,
-                                  :variable_symbol => @eshop_payment.variable_symbol,
-                                  :total_price_in_cents => @eshop_payment.total_price_in_cents,
-                                  :result => "CALL_COMPLETED",
-                                  :session_state => "WAITING")
+                                                     :product_name => @eshop_payment.product_name,
+                                                     :variable_symbol => @eshop_payment.variable_symbol,
+                                                     :total_price_in_cents => @eshop_payment.total_price_in_cents,
+                                                     :result => "CALL_COMPLETED",
+                                                     :session_state => "WAITING",
+                                                     :last_response => {
+                                                         :product_name => @eshop_payment.product_name,
+                                                         :variable_symbol => @eshop_payment.variable_symbol,
+                                                         :total_price => @eshop_payment.total_price_in_cents,
+                                                         :result => "CALL_COMPLETED",
+                                                         :session_state => "WAITING"
+                                                     })
       encrypted_stuff = "4b642f395a13254cac7aadf96def19234ce73c823d22326e688a0c4410eb9465ae842f4786cb2a2fa5b661f6d58385a0"
       assert_equal GoPay::Crypt.sha1(@payment_with_result.concat_for_validation), GoPay::Crypt.decrypt(encrypted_stuff)
     end

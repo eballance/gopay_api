@@ -10,6 +10,7 @@ module GoPay
       response = response.to_hash[:create_payment_session_response][:create_payment_session_return]
       self.payment_session_id = response[:payment_session_id]
       self.last_response = response
+      pp response
       valid?(response) ? self : false
     end
 
@@ -41,7 +42,6 @@ module GoPay
       end
       response = response.to_hash[:payment_status_gw2_response][:payment_status_gw2_return]
       session_state = response[:session_state]
-      pp response
       self.last_response = response
       valid?(response, session_state) ? session_state : false
     end
