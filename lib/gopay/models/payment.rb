@@ -61,7 +61,7 @@ module GoPay
 
     def concat_for_check
       [GoPay.configuration.goid.to_s,
-       (last_response[:payment_session_id] || payment_session_id).to_s,
+       payment_session_id.to_s,
        GoPay.configuration.secret].map { |attr| attr.strip }.join("|")
     end
 
