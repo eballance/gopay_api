@@ -1,5 +1,4 @@
 require "savon"
-require "pp"
 
 Savon.configure { |config| config.log = false }
 
@@ -19,14 +18,12 @@ module GoPay
 
     def validate_response(response, status)
       goid = (response[:eshop_go_id].to_s == GoPay.configuration.goid.to_s) || (response[:buyer_go_id].to_s == GoPay.configuration.goid.to_s)
-      result = {:result => GoPay::CALL_COMPLETED,
+      {:result => GoPay::CALL_COMPLETED,
        :result_description => status,
        :variable_symbol => variable_symbol,
        :product_name => product_name,
        :total_price => total_price_in_cents.to_s
       }.all? { |key, value| response[key].to_s == value.to_s } && goid
-      pp result
-      result
     end
 
     def valid?(response, status = nil)
@@ -38,14 +35,10 @@ module GoPay
     end
 
     def validate_signature(response)
-      pp self.concat_for_validation
-      result = GoPay::Crypt.sha1(self.concat_for_validation) == GoPay::Crypt.decrypt(response[:encrypted_signature])
-      pp result
-      result
+      GoPay::Crypt.sha1(self.concat_for_validation) == GoPay::Crypt.decrypt(response[:encrypted_signature])
     end
 
     def validate_signature_with_status(response, status)
-      pp self.concat_for_validation_with_status(status)
       GoPay::Crypt.sha1(self.concat_for_validation_with_status(status)) == GoPay::Crypt.decrypt(response[:encrypted_signature])
     end
 
@@ -77,7 +70,7 @@ module GoPay
 
     def concat_for_validation_with_status(session_state)
       repaired_payment_channel = last_response[:payment_channel].is_a?(Hash) ? "" : last_response[:payment_channel]
-      h = [GoPay.configuration.goid.to_s,
+      [GoPay.configuration.goid.to_s,
        last_response[:product_name],
        last_response[:total_price],
        last_response[:variable_symbol],
@@ -85,8 +78,6 @@ module GoPay
        session_state,
        repaired_payment_channel,
        GoPay.configuration.secret].map { |attr| attr.strip }.join("|")
-      pp h
-      h
     end
 
   end

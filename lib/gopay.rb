@@ -1,3 +1,5 @@
+require "pp"
+
 require "gopay/config"
 require "gopay/crypt"
 
