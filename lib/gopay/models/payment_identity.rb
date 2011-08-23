@@ -16,7 +16,7 @@ class PaymentIdentity
   end
 
   def valid_for_signature?(signature)
-    GoPay::Crypt.sha1(self.concat) == GoPay::Crypt.decrypt(signature, true)
+    GoPay::Crypt.sha1(self.concat) == GoPay::Crypt.decrypt(signature)
   end
 
 end

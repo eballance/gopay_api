@@ -10,7 +10,6 @@ module GoPay
       response = response.to_hash[:create_payment_session_response][:create_payment_session_return]
       self.payment_session_id = response[:payment_session_id]
       self.last_response = response
-      pp response
       valid?(response) ? self : false
     end
 

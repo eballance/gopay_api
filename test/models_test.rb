@@ -82,11 +82,11 @@ class ModelsTest < Test::Unit::TestCase
       setup do
         @payment_identity = PaymentIdentity.new(:goid => GoPay.configuration.goid,
                                                 :variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
-                                                :payment_session_id => 1)
+                                                :payment_session_id => "3000531599")
       end
 
       should "validate it" do
-        assert @payment_identity.valid_for_signature?("718337e3e4e721dd4ab6684750071fc035bd3f573abfb33046f583e56a4671a674843441558bd515")
+        assert @payment_identity.valid_for_signature?("c4102debd8485dea8646cc8e35b7a69d158c97c45674c680ffdbe7047a88933fd82844192ccbee46a5b661f6d58385a0")
       end
     end
 
