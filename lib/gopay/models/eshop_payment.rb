@@ -31,13 +31,19 @@ module GoPay
     end
 
     def is_in_state?(desired_status)
+      desired_status == actual_session_state
+    end
+
+    def actual_session_state
       client = Savon::Client.new GoPay.configuration.urls["wsdl"]
       response = client.request "paymentStatusGW2" do |soap|
         soap.body = {"paymentSessionInfo" => self.to_check_soap}
       end
       response = response.to_hash[:payment_status_gw2_response][:payment_status_gw2_return]
+      session_state = response[:session_state]
+      pp response
       self.last_response = response
-      valid?(response, desired_status)
+      valid?(response, session_state) ? session_state : false
     end
 
   end
