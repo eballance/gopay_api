@@ -4,10 +4,10 @@ module GoPay
 
   BASE_PATH = File.expand_path("../../../", __FILE__)
   PAYMENT_DONE = "PAYMENT_DONE"
-	CANCELED = "CANCELED"
-	TIMEOUTED = "TIMEOUTED"
-	WAITING = "WAITING"
-	FAILED = "FAILED"
+  CANCELED = "CANCELED"
+  TIMEOUTED = "TIMEOUTED"
+  WAITING = "WAITING"
+  FAILED = "FAILED"
   CALL_COMPLETED = "CALL_COMPLETED"
 
   def self.configure
@@ -25,6 +25,17 @@ module GoPay
     configuration.failed_url = yaml["failed_url"]
     configuration.secret = yaml["secret"]
     return configuration
+  end
+
+  def self.configure_from_rails
+    path = File.join(Rails.root, "config", "gopay.yml")
+    configure_from_yaml(path) if File.exists?(path)
+    env = if defined?(::Rails) && ::Rails.respond_to?(:env)
+      ::Rails.env.to_s
+    elsif defined?(::RAILS_ENV)
+      ::RAILS_ENV.to_s
+    end
+    @environment = env.to_sym
   end
 
   class Configuration

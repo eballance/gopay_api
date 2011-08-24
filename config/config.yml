@@ -1,4 +1,9 @@
 urls:
+  development:
+    full_integration: https://testgw.gopay.cz/zaplatit-plna-integrace
+    wsdl: https://testgw.gopay.cz/axis/EPaymentService?wsdl
+    base_integration: https://testgw.gopay.cz/zaplatit-jednoducha-integrace
+    buyer_base_integration: https://testgw.gopay.cz/zaplatit-tlacitko
   test:
     full_integration: https://testgw.gopay.cz/zaplatit-plna-integrace
     wsdl: https://testgw.gopay.cz/axis/EPaymentService?wsdl
