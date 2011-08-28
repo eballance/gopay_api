@@ -1,0 +1,104 @@
+h1. About GoPay
+
+GoPay is a library making it easy to access "GoPay.cz":http://www.gopay.cz paygate from Ruby.
+
+h2. Quick Start
+
+GoPay is distributed primarily via gem, but it can be also placed to "vendor/plugins" as a Rails plugin.
+
+h2. Configuration
+
+First, you have to include it in your Gemfile or install manually and require:
+
+<pre>
+
+# Gemfile
+gem 'gopay'
+
+# Manually
+gem install gopay
+require 'gopay'
+
+</pre>
+
+GoPay can be configured within a config block (placed in config/initializers/gopay.rb for Rails, for instance):
+
+<pre>
+
+GoPay.configure do |config|
+    config.environment = :test
+    config.goid = "XXXXX"
+    config.secret = "XXXXX"
+    config.success_url = "http://example.com/success"
+    config.failed_url = "http://example.com/failed"
+end
+
+</pre>
+
+It can also take a YAML file with configuration:
+
+<pre>
+
+# YAML file (config.yml):
+goid: XXXXX
+secret: XXXXX
+success_url: http://www.success_url.cz
+failed_url: http://www.failed_url.cz
+
+
+# Ruby:
+GoPay.configure_from_yaml("config.yml"))
+
+</pre>
+
+Such YAML config file can be also placed in Rails config dir (named gopay.yml) - it will be autoloaded.
+
+h2. Usage
+
+<pre>
+# first you have to init a payment
+payment = GoPay::EshopPayment.new(:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
+                                            :total_price_in_cents => 100,
+                                            :product_name => "productName",
+                                            :payment_channel => "cz_gp_w"
+                                           )
+# and request its creation on paygate:
+payment.create # =>
+# #<GoPay::EshopPayment:0x7fa27c0fab88
+# @last_response=
+#  {:"@xmlns:ns1"=>"urn:AxisEPaymentProvider",
+#   :total_price=>"100",
+#   :variable_symbol=>"gopay_test_8531903182",
+#   :result=>"CALL_COMPLETED",
+#   :payment_channel=>
+#    {:"@xsi:type"=>"soapenc:string",
+#     :"@xmlns:soapenc"=>"http://schemas.xmlsoap.org/soap/encoding/"},
+#   :eshop_go_id=>"8531903182",
+#  :session_state=>"WAITING",
+#   :"@xsi:type"=>"ns1:EPaymentStatus",
+#  :buyer_go_id=>
+#    {:"@xsi:type"=>"soapenc:long",
+#     :"@xmlns:soapenc"=>"http://schemas.xmlsoap.org/soap/encoding/"},
+#   :product_name=>"productName",
+#   :payment_session_id=>"3000523838",
+#   :result_description=>"WAITING",
+#  :url=>"http://www.failed_url.cz",
+#   :encrypted_signature=>
+#    "b653c3b55e981abb29ff9a6b25eb1153abb4d5e888b4675594b636456146c189fba2f81e6303dfa3a5b661f6d58385a0"},
+# @payment_channel="cz_gp_w",
+# @payment_session_id="3000523838",
+# @product_name="productName",
+# @total_price_in_cents=100,
+
+# After user gets back to success/failed url, you can check status of payment:
+payment = GoPay::EshopPayment.new(:variable_symbol => "XXXXX",
+                                      :total_price_in_cents => price.to_i,
+                                      :product_name => name,
+                                      :payment_session_id => payment_session_id,
+                                      :payment_channels => ["cz_gp_w"])
+
+payment.actual_session_state # => "PAYMENT_DONE"
+payment.is_in_state?(GoPay::PAYMENT_DONE) # => true
+
+</pre>
+
