@@ -20,6 +20,7 @@ module GoPay
 
   def self.configure_from_yaml(path)
     yaml = YAML.load_file(path)
+    return unless yaml
     configuration.goid = yaml["goid"]
     configuration.success_url = yaml["success_url"]
     configuration.failed_url = yaml["failed_url"]
@@ -36,6 +37,7 @@ module GoPay
       ::RAILS_ENV.to_s
     end
     @environment = env.to_sym
+    warn "GoPay wasnt properly configured." if GoPay.configuration.goid.blank?
   end
 
   class Configuration

@@ -49,13 +49,13 @@ module GoPay
        variable_symbol.strip,
        GoPay.configuration.failed_url,
        GoPay.configuration.success_url,
-       GoPay.configuration.secret].map { |attr| attr }.join("|")
+       GoPay.configuration.secret].map { |attr| attr.to_s }.join("|")
     end
 
     def concat_for_check
       [GoPay.configuration.goid.to_s,
        payment_session_id.to_s,
-       GoPay.configuration.secret].map { |attr| attr.strip }.join("|")
+       GoPay.configuration.secret].map { |attr| attr.to_s.strip }.join("|")
     end
 
     def concat_for_validation
@@ -77,7 +77,7 @@ module GoPay
        last_response[:result],
        session_state,
        repaired_payment_channel,
-       GoPay.configuration.secret].map { |attr| attr.strip }.join("|")
+       GoPay.configuration.secret].map { |attr| attr.to_s.strip }.join("|")
     end
 
   end
