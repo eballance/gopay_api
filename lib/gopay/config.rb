@@ -28,7 +28,7 @@ module GoPay
   end
 
   def self.configure_from_rails
-    path = File.join(Rails.root, "config", "gopay.yml")
+    path = ::Rails.root.join("config", "gopay.yml")
     configure_from_yaml(path) if File.exists?(path)
     env = if defined?(::Rails) && ::Rails.respond_to?(:env)
       ::Rails.env.to_s
