@@ -8,6 +8,12 @@ module GoPay
       hash.merge!("buyerGoId" => GoPay.configuration.goid.to_i)
     end
 
+    def to_check_soap
+      hash = super
+      hash.delete("eshopGoId")
+      hash.merge!("buyerGoId" => GoPay.configuration.goid.to_i)
+    end
+
   end
 
 end

@@ -9,6 +9,7 @@ module GoPay
   WAITING = "WAITING"
   FAILED = "FAILED"
   CALL_COMPLETED = "CALL_COMPLETED"
+  UNKNOWN = "UNKNOWN"
 
   def self.configure
     yield configuration
@@ -32,11 +33,11 @@ module GoPay
     path = ::Rails.root.join("config", "gopay.yml")
     configure_from_yaml(path) if File.exists?(path)
     env = if defined?(::Rails) && ::Rails.respond_to?(:env)
-      ::Rails.env.to_s
+      ::Rails.env.to_sym
     elsif defined?(::RAILS_ENV)
-      ::RAILS_ENV.to_s
+      ::RAILS_ENV.to_sym
     end
-    @environment = env.to_sym
+    @environment = env
     warn "GoPay wasnt properly configured." if GoPay.configuration.goid.blank?
   end
 
@@ -45,7 +46,7 @@ module GoPay
     attr_reader :country_codes, :messages
 
     def initialize
-      @environment ||= :production
+      @environment = :production if @environment.nil?
       @country_codes = YAML.load_file File.join(BASE_PATH, "config", "country_codes.yml")
       config = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))
       @urls = config["urls"]

@@ -24,8 +24,8 @@ class ModelsTest < Test::Unit::TestCase
       end
 
       should "check status of that payment" do
-        created = @payment.create
-        @payment.is_in_state?(GoPay::WAITING)
+        @payment.create
+        assert @payment.is_in_state?(GoPay::WAITING)
       end
     end
 
@@ -42,7 +42,7 @@ class ModelsTest < Test::Unit::TestCase
                                                     :postal_code => "140 00",
                                                     :email => "patrikjira@example.com",
                                                     :phone_number => "777 777 777",
-                                                    :payment_channel => "cz_gp_w"})
+                                                    :payment_channels => ["cz_gp_w"]})
       end
 
       should "create and verify this payment on paygate" do
@@ -59,7 +59,7 @@ class ModelsTest < Test::Unit::TestCase
         @payment = GoPay::BuyerPayment.new({:variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
                                             :total_price_in_cents => 100,
                                             :product_name => "productName",
-                                            :payment_channel => "cz_gp_w"
+                                            :payment_channels => ["cz_gp_w"]
                                            })
       end
 
@@ -72,7 +72,7 @@ class ModelsTest < Test::Unit::TestCase
 
       should "check status of that payment" do
         @payment.create
-        @payment.is_in_state?(GoPay::WAITING)
+        assert @payment.is_in_state?(GoPay::WAITING)
       end
 
     end
