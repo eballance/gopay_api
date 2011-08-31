@@ -37,7 +37,7 @@ module GoPay
     elsif defined?(::RAILS_ENV)
       ::RAILS_ENV.to_sym
     end
-    configuration.environment = (env == :development) ? :test : env
+    configuration.environment ||= (env == :development) ? :test : env
     warn "GoPay wasnt properly configured." if GoPay.configuration.goid.blank?
     configuration
   end
@@ -51,11 +51,11 @@ module GoPay
       config = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))
       @urls = config["urls"]
       @messages = config["messages"]
-      @environment ||= :production
     end
 
     def urls
-      @urls[@environment.to_s]
+      env = @environment.nil? ? "test" : @environment.to_s
+      @urls[env]
     end
 
   end
