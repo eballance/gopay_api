@@ -28,7 +28,7 @@ module GoPay
 
     def valid?(response, status = nil)
       if status
-        validate_response(response, status) && validate_signature_with_status(response, status)
+        validate_response(response, status) && validate_signature_with_status(response)
       else
         validate_response(response, GoPay::WAITING) && validate_signature(response)
       end
@@ -38,8 +38,8 @@ module GoPay
       GoPay::Crypt.sha1(self.concat_for_validation) == GoPay::Crypt.decrypt(response[:encrypted_signature])
     end
 
-    def validate_signature_with_status(response, status)
-      GoPay::Crypt.sha1(self.concat_for_validation_with_status(status)) == GoPay::Crypt.decrypt(response[:encrypted_signature])
+    def validate_signature_with_status(response)
+      GoPay::Crypt.sha1(self.concat_for_validation_with_status) == GoPay::Crypt.decrypt(response[:encrypted_signature])
     end
 
     def concat_for_create
@@ -68,14 +68,14 @@ module GoPay
        GoPay.configuration.secret].map { |attr| attr.to_s.strip }.join("|")
     end
 
-    def concat_for_validation_with_status(session_state)
+    def concat_for_validation_with_status
       repaired_payment_channel = last_response[:payment_channel].is_a?(Hash) ? "" : last_response[:payment_channel]
       [GoPay.configuration.goid.to_s,
        last_response[:product_name],
        last_response[:total_price],
        last_response[:variable_symbol],
        last_response[:result],
-       session_state,
+       last_response[:session_state],
        repaired_payment_channel,
        GoPay.configuration.secret].map { |attr| attr.to_s.strip }.join("|")
     end
