@@ -85,7 +85,7 @@ module GoPay
       parameters = {"sessionInfo.eshopGoId" => GoPay.configuration.goid,
                     "sessionInfo.paymentSessionId" => payment_session_id,
                     "sessionInfo.encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_check),
-                    "paymentChannel" => "cz_gp_w"}
+                    "paymentChannel" => payment_channel || "cz_gp_w"}
       query_string = parameters.map { |key, value| "#{key}=#{value}" }.join("&")
       GoPay.configuration.urls["full_integration"] + "?" + query_string
     end
