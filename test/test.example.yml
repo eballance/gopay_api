@@ -1,0 +1,7 @@
+goid: XXXXYYYYZZ
+success_url: http://www.example.com/gopay/soap/callback
+failed_url: http://www.example.com/gopay/soap/callback
+callback_url: http://www.example.com/gopay/soap/callback
+action_url: http://www.example.com/gopay/soap/callback
+lang: cs
+secure_key: SECUREKEYSECUREKEY123

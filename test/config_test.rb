@@ -7,9 +7,7 @@ class ConfigTest < Test::Unit::TestCase
 
     should "load both config and country_codes yml files" do
       assert_equal "Česká Republika", GoPay.configuration.country_codes["CZE"]
-      assert_equal "https://testgw.gopay.cz/zaplatit-plna-integrace", GoPay.configuration.urls["full_integration"]
-      assert_equal 8531903182, GoPay.configuration.goid
-      assert_equal "http://www.failed_url.cz", GoPay.configuration.failed_url
+      assert_equal "https://testgw.gopay.cz/gw/pay-full-v2", GoPay.configuration.urls["full_integration"]
     end
 
   end

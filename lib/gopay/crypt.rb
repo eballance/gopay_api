@@ -14,7 +14,7 @@ module GoPay
       string = sha1(string)
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.encrypt
-      des.key = GoPay.configuration.secret
+      des.key = GoPay.configuration.secure_key
       result = des.update(string)
       result.unpack("H*").to_s
     end
@@ -24,7 +24,7 @@ module GoPay
       des = OpenSSL::Cipher::Cipher.new("des-ede3")
       des.decrypt
       des.padding = 0 if padding_off
-      des.key = GoPay.configuration.secret
+      des.key = GoPay.configuration.secure_key
       result = ""
       result << des.update(encrypted_data)
     end

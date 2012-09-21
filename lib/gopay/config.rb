@@ -3,12 +3,16 @@ require "yaml"
 module GoPay
 
   BASE_PATH = File.expand_path("../../../", __FILE__)
-  PAYMENT_DONE = "PAYMENT_DONE"
+  CREATED = "CREATED"
+  PAYMENT_METHOD_CHOSEN = "PAYMENT_METHOD_CHOSEN"
+  PAID = "PAID"
+  AUTHORIZED = "AUTHORIZED"
   CANCELED = "CANCELED"
   TIMEOUTED = "TIMEOUTED"
-  WAITING = "WAITING"
+  REFUNDED = "REFUNDED"
   FAILED = "FAILED"
   CALL_COMPLETED = "CALL_COMPLETED"
+  CALL_FAILED = "CALL_FAILED"
   UNKNOWN = "UNKNOWN"
 
   def self.configure
@@ -25,7 +29,7 @@ module GoPay
     configuration.goid = yaml["goid"]
     configuration.success_url = yaml["success_url"]
     configuration.failed_url = yaml["failed_url"]
-    configuration.secret = yaml["secret"]
+    configuration.secure_key = yaml["secure_key"]
     return configuration
   end
 
@@ -43,7 +47,7 @@ module GoPay
   end
 
   class Configuration
-    attr_accessor :environment, :goid, :success_url, :failed_url, :secret
+    attr_accessor :environment, :goid, :success_url, :failed_url, :secure_key
     attr_reader :country_codes, :messages
 
     def initialize
