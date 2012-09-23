@@ -34,13 +34,17 @@ module GoPay
       valid_response?(response, GoPay::STATUSES[:created])
     end
 
-    def load(desired_status = nil)
+    def load(validated_status = nil)
       client = Savon::Client.new GoPay.configuration.urls["wsdl"]
       soap_response = client.request "paymentStatus" do |soap|
         soap.body = {"paymentSessionInfo" => payment_session_hash}
       end
       self.response = soap_response.to_hash[:payment_status_response][:payment_status_return]
-      valid_payment_session?(response, desired_status)
+      valid_payment_session?(response, validated_status)
+    end
+
+    def is_in_status?(status)
+      load(status)
     end
 
     def payment_command_hash
@@ -106,10 +110,10 @@ module GoPay
       status_valid && response_valid && signature_valid
     end
 
-    def valid_identity?(params)
+    def valid_identity?(params, padding_off = false)
       params['targetGoId'] == target_goid.to_s &&
           params['orderNumber'] == order_number.to_s &&
-          GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'])
+          GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'], padding_off)
     end
 
     def concat_payment_identity(params)
