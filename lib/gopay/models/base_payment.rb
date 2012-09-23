@@ -101,9 +101,7 @@ module GoPay
       }.all? { |key, value|
         response[key].to_s == value.to_s }
 
-      ap response_valid
-      signature_valid = GoPay::Crypt.sha1(concat_payment_session) == GoPay::Crypt.decrypt(response[:encrypted_signature])
-      puts signature_valid.inspect
+      signature_valid = GoPay::Crypt.sha1(concat_payment_status(response)) == GoPay::Crypt.decrypt(response[:encrypted_signature])
 
       status_valid && response_valid && signature_valid
     end
@@ -143,6 +141,22 @@ module GoPay
       [target_goid,
        payment_session_id,
        secure_key].map { |attr| attr.to_s.strip }.join("|")
+    end
+
+    def concat_payment_status(response)
+      [response[:target_go_id],
+       response[:product_name],
+       response[:total_price],
+       response[:currency],
+       response[:order_number],
+       response[:recurrent_payment] ? 1 : 0,
+       response[:parent_payment_session_id],
+       response[:pre_authorization] ? 1 : 0,
+       response[:result],
+       response[:session_state],
+       response[:session_sub_state],
+       response[:payment_channel],
+       secure_key].map { |attr| attr.is_a?(Hash) ? "" : attr.to_s }.join("|")
     end
 
     def gopay_url
