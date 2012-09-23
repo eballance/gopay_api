@@ -22,14 +22,13 @@ class ModelsTest < Test::Unit::TestCase
       should "create and verify this payment on paygate" do
         assert @base_payment.create
         assert @base_payment.payment_session_id.to_i > 0
-        assert @base_payment.last_response.is_a?(Hash)
+        assert @base_payment.response.is_a?(Hash)
       end
 
-      #should "check status of that payment" do
-      #  @payment.create
-      #  assert @payment.is_in_state?(GoPay::WAITING)
-      #end
-
+      should "check status of that payment" do
+        @base_payment.create
+        assert @base_payment.load(GoPay::STATUSES[:created])
+      end
 
       should "validate base payment identity" do
         params = {'targetGoId' => GoPay.configuration.goid.to_s,

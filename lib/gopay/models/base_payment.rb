@@ -21,20 +21,29 @@ module GoPay
                 :first_name, :last_name, :city, :street, :postal_code, :country_code,
                 :email, :phone_number, :p1, :p2, :p3, :p4, :lang,
                 :session_state
-    attr_accessor :payment_session_id, :last_response
+
+    attr_accessor :payment_session_id, :response
 
     def create
       client = Savon::Client.new GoPay.configuration.urls["wsdl"]
-      response = client.request "createPayment" do |soap|
-        soap.body = {"paymentCommand" => self.to_soap}
+      soap_response = client.request "createPayment" do |soap|
+        soap.body = {"paymentCommand" => payment_command_hash}
       end
-      response = response.to_hash[:create_payment_response][:create_payment_return]
+      self.response = soap_response.to_hash[:create_payment_response][:create_payment_return]
       self.payment_session_id = response[:payment_session_id]
-      self.last_response = response
-      valid_response?(response, GoPay::CREATED)
+      valid_response?(response, GoPay::STATUSES[:created])
     end
 
-    def to_soap
+    def load(desired_status = nil)
+      client = Savon::Client.new GoPay.configuration.urls["wsdl"]
+      soap_response = client.request "paymentStatus" do |soap|
+        soap.body = {"paymentSessionInfo" => payment_session_hash}
+      end
+      self.response = soap_response.to_hash[:payment_status_response][:payment_status_return]
+      valid_payment_session?(response, desired_status)
+    end
+
+    def payment_command_hash
       {"targetGoId" => target_goid.to_i,
        "productName" => product_name,
        "totalPrice" => total_price_in_cents,
@@ -45,7 +54,7 @@ module GoPay
        "preAuthorization" => false,
        "defaultPaymentChannel" => default_payment_channel,
        "recurrentPayment" => false,
-       "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_payment_command),
+       "encryptedSignature" => GoPay::Crypt.encrypt(concat_payment_command),
        "customerData" => {
            "firstName" => first_name,
            "lastName" => last_name,
@@ -59,22 +68,44 @@ module GoPay
        "lang" => lang}
     end
 
-    def to_check_soap
-      {"eshopGoId" => GoPay.configuration.goid.to_i,
+    def payment_session_hash
+      {"targetGoId" => target_goid.to_i,
        "paymentSessionId" => payment_session_id,
-       "encryptedSignature" => GoPay::Crypt.encrypt(self.concat_for_check)}
+       "encryptedSignature" => GoPay::Crypt.encrypt(concat_payment_session)}
     end
 
     def valid_response?(response, status)
+      raise "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
       goid_valid = (response[:target_go_id].to_s == target_goid)
 
-      response_valid = {:result => GoPay::CALL_COMPLETED,
-                        :session_state => status,
+      response_valid = {:session_state => status,
                         :product_name => product_name,
                         :total_price => total_price_in_cents.to_s
       }.all? { |key, value| response[key].to_s == value.to_s }
 
       response_valid && goid_valid
+    end
+
+    def valid_payment_session?(response, status = nil)
+      raise "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
+      status_valid = if status
+                       response[:session_state] == status
+                     else
+                       GoPay::STATUSES.values.include?(response[:session_state])
+                     end
+      response_valid = {:order_number => order_number,
+                        :product_name => product_name,
+                        :target_go_id => target_goid,
+                        :total_price => total_price_in_cents,
+                        :currency => currency
+      }.all? { |key, value|
+        response[key].to_s == value.to_s }
+
+      ap response_valid
+      signature_valid = GoPay::Crypt.sha1(concat_payment_session) == GoPay::Crypt.decrypt(response[:encrypted_signature])
+      puts signature_valid.inspect
+
+      status_valid && response_valid && signature_valid
     end
 
     def valid_identity?(params)

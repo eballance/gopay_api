@@ -3,17 +3,12 @@ require "yaml"
 module GoPay
 
   BASE_PATH = File.expand_path("../../../", __FILE__)
-  CREATED = "CREATED"
-  PAYMENT_METHOD_CHOSEN = "PAYMENT_METHOD_CHOSEN"
-  PAID = "PAID"
-  AUTHORIZED = "AUTHORIZED"
-  CANCELED = "CANCELED"
-  TIMEOUTED = "TIMEOUTED"
-  REFUNDED = "REFUNDED"
-  FAILED = "FAILED"
-  CALL_COMPLETED = "CALL_COMPLETED"
-  CALL_FAILED = "CALL_FAILED"
-  UNKNOWN = "UNKNOWN"
+  STATUSES = {:created => "CREATED", :payment_method_chosen => "PAYMENT_METHOD_CHOSEN",
+              :paid => "PAID", :authorized => "AUTHORIZED",
+              :canceled => "CANCELED", :timeouted => "TIMEOUTED",
+              :refunded => "REFUNDED", :failed => "FAILED",
+              :call_completed => "CALL_COMPLETED", :call_failed => "CALL_FAILED",
+              :unknown => "UNKNOWN"}
 
   def self.configure
     yield configuration
@@ -37,10 +32,10 @@ module GoPay
     path = ::Rails.root.join("config", "gopay.yml")
     configure_from_yaml(path) if File.exists?(path)
     env = if defined?(::Rails) && ::Rails.respond_to?(:env)
-      ::Rails.env.to_sym
-    elsif defined?(::RAILS_ENV)
-      ::RAILS_ENV.to_sym
-    end
+            ::Rails.env.to_sym
+          elsif defined?(::RAILS_ENV)
+            ::RAILS_ENV.to_sym
+          end
     configuration.environment ||= (env == :development) ? :test : env
     warn "GoPay wasnt properly configured." if GoPay.configuration.goid.blank?
     configuration
