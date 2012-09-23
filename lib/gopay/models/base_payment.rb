@@ -77,6 +77,20 @@ module GoPay
       response_valid && goid_valid
     end
 
+    def valid_identity?(params)
+      params['targetGoId'] == target_goid.to_s &&
+          params['orderNumber'] == order_number.to_s &&
+          GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'])
+    end
+
+    def concat_payment_identity(params)
+      [params['targetGoId'],
+       params['paymentSessionId'],
+       params['parentPaymentSessionId'],
+       params['orderNumber'],
+       secure_key].map { |attr| attr.to_s.strip }.join("|")
+    end
+
     def concat_payment_command
       [target_goid,
        product_name.strip,

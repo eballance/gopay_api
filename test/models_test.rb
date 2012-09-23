@@ -29,20 +29,18 @@ class ModelsTest < Test::Unit::TestCase
       #  @payment.create
       #  assert @payment.is_in_state?(GoPay::WAITING)
       #end
-    end
 
-    #context "when having an identity returned" do
-    #
-    #  setup do
-    #    @payment_identity = PaymentIdentity.new(:goid => GoPay.configuration.goid,
-    #                                            :variable_symbol => "gopay_test_#{GoPay.configuration.goid}",
-    #                                            :payment_session_id => "3000531599")
-    #  end
-    #
-    #  should "validate it" do
-    #    assert @payment_identity.valid_for_signature?("c4102debd8485dea8646cc8e35b7a69d158c97c45674c680ffdbe7047a88933fd82844192ccbee46a5b661f6d58385a0")
-    #  end
-    #end
+
+      should "validate base payment identity" do
+        params = {'targetGoId' => GoPay.configuration.goid.to_s,
+                  'orderNumber' => 'xxxxyyyy',
+                  'paymentSessionId' => '123456',
+                  'encryptedSignature' => '452ec56f6aad6268b1c6551011667e24e4eb2da6c8e05a310ff0716d651dd413a6aa9c8511904ae3'}
+
+        assert @base_payment.valid_identity?(params)
+      end
+
+    end
 
   end
 
