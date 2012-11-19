@@ -16,7 +16,7 @@ module GoPay
       des.encrypt
       des.key = GoPay.configuration.secure_key
       result = des.update(string)
-      result.unpack("H*").to_s
+      result.unpack("H*")[0]
     end
 
     def decrypt(encrypted_data, padding_off = false)
