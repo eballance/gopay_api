@@ -113,9 +113,10 @@ module GoPay
     end
 
     def valid_identity?(params, padding_off = false)
-      params['targetGoId'] == target_goid.to_s &&
-          params['orderNumber'] == order_number.to_s &&
-          GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'], padding_off)
+      raise 'invalid targetGoId' unless params['targetGoId'] == target_goid.to_s
+      raise 'invalid orderNumber' unless params['orderNumber'] == order_number.to_s
+      raise 'invalid encryptedSignature' unless GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'], padding_off)
+      true
     end
 
     def concat_payment_identity(params)
