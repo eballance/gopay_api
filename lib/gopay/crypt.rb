@@ -21,7 +21,7 @@ module GoPay
 
     def decrypt(encrypted_data, padding_off = false)
       encrypted_data = bin2hex(encrypted_data)
-      des = OpenSSL::Cipher::Cipher.new("des-ede3")
+      des = OpenSSL::Cipher.new("des-ede3")
       des.decrypt
       des.padding = 0 if padding_off
       des.key = GoPay.configuration.secure_key
@@ -30,7 +30,7 @@ module GoPay
     end
 
     def bin2hex(bin)
-      bin.scan(/../).map { | tuple | tuple.hex.chr }.to_s
+      bin.scan(/../).map { |tuple| tuple.hex }.pack 'c*'
     end
   end
 
