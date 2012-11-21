@@ -30,8 +30,10 @@ module GoPay
         soap.body = {"paymentCommand" => payment_command_hash}
       end
       self.response = soap_response.to_hash[:create_payment_response][:create_payment_return]
-      self.payment_session_id = response[:payment_session_id]
       valid_response?(response, GoPay::STATUSES[:created])
+      valid = valid_response?(response, GoPay::STATUSES[:created])
+      self.payment_session_id = response[:payment_session_id] if valid
+      valid
     end
 
     def load(validated_status = nil)
