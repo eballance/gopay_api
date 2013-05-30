@@ -1,7 +1,5 @@
 require "savon"
 
-Savon.configure { |config| config.log = false }
-
 module GoPay
   class PaymentMethod
 
@@ -14,8 +12,9 @@ module GoPay
     end
 
     def self.all
-      client = Savon::Client.new GoPay.configuration.urls["wsdl"]
-      response = client.request("paymentMethodList")
+      client = Savon::Client.new wsdl: GoPay.configuration.urls["wsdl"], log: false
+      response = client.call :payment_method_list
+
       response.to_hash[:payment_method_list_response][:payment_method_list_return][:payment_method_list_return].map do |item|
         PaymentMethod.new(item)
       end
