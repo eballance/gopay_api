@@ -23,8 +23,8 @@ module GoPay
     attr_accessor :payment_session_id, :response
 
     def create
-      client = Savon::Client.new wsdl: GoPay.configuration.urls["wsdl"], log: false
-      soap_response = client.call :create_payment, message: { payment_command: payment_command_hash }
+      client = Savon::Client.new :wsdl => GoPay.configuration.urls["wsdl"], :log => false
+      soap_response = client.call :create_payment, :message => { :payment_command => payment_command_hash }
 
       self.response = soap_response.to_hash[:create_payment_response][:create_payment_return]
       valid_response?(response, GoPay::STATUSES[:created])
@@ -34,8 +34,8 @@ module GoPay
     end
 
     def load(validated_status = nil)
-      client = Savon::Client.new wsdl: GoPay.configuration.urls["wsdl"], log: false
-      soap_response = client.call :payment_status, message: { paymen_session_info: payment_session_hash }
+      client = Savon::Client.new :wsdl => GoPay.configuration.urls["wsdl"], :log => false
+      soap_response = client.call :payment_status, :message => { :payment_session_info => payment_session_hash }
 
       self.response = soap_response.to_hash[:payment_status_response][:payment_status_return]
       valid_payment_session?(response, validated_status)
