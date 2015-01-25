@@ -12,7 +12,7 @@ module GoPay
 
     def encrypt(string)
       string = sha1(string)
-      des = OpenSSL::Cipher::Cipher.new("des-ede3")
+      des = OpenSSL::Cipher.new("des-ede3")
       des.encrypt
       des.key = GoPay.configuration.secure_key
       result = des.update(string)
