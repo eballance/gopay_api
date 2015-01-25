@@ -11,7 +11,6 @@ else
 end
 
 require "gopay"
-require "awesome_print"
 
 GoPay.configure do |config|
   config.environment = :test
