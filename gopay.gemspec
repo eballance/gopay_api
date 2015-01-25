@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "gopay"
 
   s.add_dependency("savon",  ">= 2.0.0")
+  s.add_development_dependency("minitest")
   s.add_development_dependency("shoulda")
   s.add_development_dependency("mocha")
 

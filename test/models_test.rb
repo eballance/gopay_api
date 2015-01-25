@@ -1,7 +1,6 @@
 require "test_helper"
 
-class ModelsTest < Test::Unit::TestCase
-
+class ModelsTest < Minitest::Test
   context "GoPay configured" do
 
     should "load payment methods" do

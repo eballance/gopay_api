@@ -1,8 +1,7 @@
 # encoding: utf-8
 require "test_helper"
 
-class ConfigTest < Test::Unit::TestCase
-
+class ConfigTest < Minitest::Test
   context "GoPay configured" do
 
     should "load both config and country_codes yml files" do

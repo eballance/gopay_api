@@ -1,7 +1,6 @@
 require "test_helper"
 
-class CryptTest < Test::Unit::TestCase
-
+class CryptTest < Minitest::Test
   context "GoPay configured" do
 
     setup do
