@@ -2,7 +2,6 @@ require "digest/sha1"
 require "openssl"
 
 module GoPay
-
   module Crypt
     extend self
 
@@ -33,5 +32,4 @@ module GoPay
       bin.scan(/../).map { |tuple| tuple.hex }.pack 'c*'
     end
   end
-
 end
