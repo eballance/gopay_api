@@ -1,7 +1,7 @@
 urls:
   test:
-    full_integration: http://testgw.gopay.cz/gw/pay-full-v2
-    wsdl: http://testgw.gopay.cz/axis/EPaymentServiceV2?wsdl
+    full_integration: https://testgw.gopay.cz/gw/pay-full-v2
+    wsdl: https://testgw.gopay.cz/axis/EPaymentServiceV2?wsdl
     base_integration: https://testgw.gopay.cz/gw/pay-base-v2
     get_account_statement_url: https://testgw.gopay.cz/gw/services/get-account-statement
   production:

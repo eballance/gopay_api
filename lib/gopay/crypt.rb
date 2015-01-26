@@ -2,7 +2,6 @@ require "digest/sha1"
 require "openssl"
 
 module GoPay
-
   module Crypt
     extend self
 
@@ -12,7 +11,7 @@ module GoPay
 
     def encrypt(string)
       string = sha1(string)
-      des = OpenSSL::Cipher::Cipher.new("des-ede3")
+      des = OpenSSL::Cipher.new("des-ede3")
       des.encrypt
       des.key = GoPay.configuration.secure_key
       result = des.update(string)
@@ -33,5 +32,4 @@ module GoPay
       bin.scan(/../).map { |tuple| tuple.hex }.pack 'c*'
     end
   end
-
 end
