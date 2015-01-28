@@ -36,18 +36,14 @@ module GoPay
     configuration
   end
 
-  def self.configure_from_rails
-    path = ::Rails.root.join("config", "gopay.yml")
-    configure_from_yaml(path) if File.exists?(path)
-    
+  def self.configure_env_from_rails    
     env = if defined?(::Rails) && ::Rails.respond_to?(:env)
             ::Rails.env.to_sym
           elsif defined?(::RAILS_ENV)
             ::RAILS_ENV.to_sym
           end
+          
     configuration.environment ||= (env == :production) ? :production : :test
-    
-    warn "GoPay wasnt properly configured." if GoPay.configuration.goid.blank?
     configuration
   end
 
