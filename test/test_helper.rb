@@ -1,6 +1,4 @@
-$: << File.join(File.expand_path(File.dirname(__FILE__)), "../lib")
-
-require "rubygems"
+require 'yaml' # yaml has to be loaded here
 require 'minitest/autorun'
 require "shoulda"
 require 'mocha/setup'
