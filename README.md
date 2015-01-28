@@ -46,7 +46,7 @@ failed_url: http://www.failed_url.cz
 GoPay.configure_from_yaml("config.yml"))
 ```
 
-Such YAML config file can be also placed in Rails config dir (named gopay.yml) - it will be autoloaded.
+Such YAML config file can be also placed in Rails config dir (named `gopay.yml`) - it will be autoloaded.
 
 ## Usage
 
