@@ -6,10 +6,11 @@ module GoPay
       attributes.each do |key, value|
         instance_variable_set(:"@#{key}", value) if self.respond_to?(key)
       end
-      @target_goid ||= GoPay.configuration.goid.to_s
-      @secure_key ||= GoPay.configuration.secure_key.to_s
+      
+      @target_goid      ||= GoPay.configuration.goid.to_s
+      @secure_key       ||= GoPay.configuration.secure_key.to_s
       @payment_channels ||= []
-      @payment_channels = @payment_channels.join(',')
+      @payment_channels   = @payment_channels.join(',')
     end
 
     attr_reader :target_goid, :product_name, :total_price_in_cents, :currency,
@@ -78,7 +79,7 @@ module GoPay
     end
 
     def valid_response?(response, status)
-      raise "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
+      raise CallNotCompletedError, "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
       goid_valid = (response[:target_go_id].to_s == target_goid)
 
       response_valid = {
@@ -91,7 +92,7 @@ module GoPay
     end
 
     def valid_payment_session?(response, status = nil)
-      raise "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
+      raise CallNotCompletedError, "CALL NOT COMPLETED " if response[:result] != GoPay::STATUSES[:call_completed]
       
       status_valid = if status
                        response[:session_state] == status
@@ -111,9 +112,9 @@ module GoPay
     end
 
     def valid_identity?(params, padding_off = false)
-      raise 'invalid targetGoId'         unless params['targetGoId'] == target_goid.to_s
-      raise 'invalid orderNumber'        unless params['orderNumber'] == order_number.to_s
-      raise 'invalid encryptedSignature' unless GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'], padding_off)
+      raise InvalidIdentityError, 'invalid targetGoId'         unless params['targetGoId'] == target_goid.to_s
+      raise InvalidIdentityError, 'invalid orderNumber'        unless params['orderNumber'] == order_number.to_s
+      raise InvalidIdentityError, 'invalid encryptedSignature' unless GoPay::Crypt.sha1(concat_payment_identity(params)) == GoPay::Crypt.decrypt(params['encryptedSignature'], padding_off)
       true
     end
 
