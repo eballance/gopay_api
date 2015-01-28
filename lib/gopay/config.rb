@@ -56,7 +56,6 @@ module GoPay
     attr_reader   :country_codes, :messages
 
     def initialize
-      @country_codes = YAML.load_file File.join(BASE_PATH, "config", "country_codes.yml")
       config    = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))
       @urls     = config["urls"]
       @messages = config["messages"]
