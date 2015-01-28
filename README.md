@@ -31,23 +31,6 @@ GoPay.configure do |config|
 end
 ```
 
-It can also take a YAML file with configuration:
-
-```yaml
-# YAML file (config.yml):
-goid: XXXXX
-secret: XXXXX
-success_url: http://www.success_url.cz
-failed_url: http://www.failed_url.cz
-```
-
-```ruby
-# Ruby:
-GoPay.configure_from_yaml("config.yml"))
-```
-
-Such YAML config file can be also placed in Rails config dir (named `gopay.yml`) - it will be autoloaded.
-
 ## Usage
 
 While gem is under decent construction, I removed old usage example in favor of tests that are actual as hell! ;)
