@@ -25,7 +25,6 @@ module GoPay
       soap_response = client.call :create_payment, message: { payment_command: payment_command_hash }
 
       self.response = soap_response.to_hash[:create_payment_response][:create_payment_return]
-      valid_response?(response, GoPay::STATUSES[:created])
       valid = valid_response?(response, GoPay::STATUSES[:created])
       self.payment_session_id = response[:payment_session_id] if valid
       valid
